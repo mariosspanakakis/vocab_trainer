@@ -1,0 +1,6 @@
+{
+    "MIN_LEVEL": 0.0,
+    "MAX_LEVEL": 5.0,
+    "LVL_DECAY": 0.1,
+    "LVL_GROWTH": 0.2
+}
