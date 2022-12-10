@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
 import json
+from utils import get_param
 from trainer import Trainer
 from word import Word
 
@@ -42,9 +43,15 @@ class TrainerLogic(QObject):
         self.sig_update_word_card.emit(dict(), False)
         self.sig_switch_menu.emit(0)
 
+    # save the current vocabulary list to a JSON file
     def save(self):
-        vocabulary = [word.to_dict() for stage in self.trainer.stages.values()
-                        for word in stage]
-
-        with open('user_data/vocabulary.json', 'w') as file:
+        vocabulary = {}
+        for key, stage in self.trainer.stages.items():
+            vocabulary[key] = [word.to_dict() for word in stage]
+        with open(get_param('DATA_FILE'), 'w', encoding='utf8') as file:
             json.dump(vocabulary, file)
+
+    # load the latest vocabulary configuration from the data file
+    def load(self):
+        with open(get_param('DATA_FILE'), 'r', encoding='utf8') as file:
+            print(json.load(file))

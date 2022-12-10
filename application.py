@@ -13,6 +13,8 @@ class Application(QApplication):
 
         self.connect_signals()
 
+        self.trainer_logic.load()
+
     def connect_signals(self):
         # frontend -> backend
         self.interface.sig_get_new_word.connect(
