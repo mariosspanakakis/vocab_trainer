@@ -1,4 +1,6 @@
-from trainer import Trainer
+import sys
+from application import Application
+"""from trainer import Trainer
 from word import Word
 
 
@@ -22,4 +24,16 @@ while 1:
     if user_input == 'y':
         trainer.reclassify_word(word, known=True)
     else:
-        trainer.reclassify_word(word, known=False)
+        trainer.reclassify_word(word, known=False)"""
+
+
+if __name__ == '__main__':
+    def hook(type_, value, traceback):
+        print(type_)
+        print(traceback)
+    sys.__excepthook__ = hook
+
+    app = Application(sys.argv)
+    app.start()
+
+    sys.exit(app.exec())

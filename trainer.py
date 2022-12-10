@@ -18,11 +18,11 @@ class Trainer:
         self.stage_weights /= np.sum(self.stage_weights)
 
     # add a word to the list of known words
-    def add_word(self, word: Word):
+    def add_word(self, word: Word) -> None:
         self.stages[word.stage].appendleft(word)
 
     # draw the next word from a random stage
-    def draw_word(self):
+    def draw_word(self) -> Word:
         stage = np.random.choice(range(1, len(self.stages) + 1), p=self.stage_weights)
         word = None
         while not word:
@@ -39,7 +39,7 @@ class Trainer:
         return word
     
     # update the word status and put it into the corresponding stage
-    def reclassify_word(self, word: Word, known: bool):
+    def reclassify_word(self, word: Word, known: bool) -> None:
         word.update_level(known)
         self.stages[word.stage].appendleft(word)
 
