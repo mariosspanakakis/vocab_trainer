@@ -40,7 +40,7 @@ class TrainerLogic(QObject):
         for key, stage in self.trainer.stages.items():
             vocabulary[key] = [word.to_dict() for word in stage]
         with open(get_param('DATA_FILE'), 'w', encoding='utf8') as file:
-            json.dump(vocabulary, file)
+            json.dump(vocabulary, file, indent=4)
 
     # load the latest vocabulary configuration from the data file
     def load(self):
