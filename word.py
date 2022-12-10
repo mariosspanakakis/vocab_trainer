@@ -5,13 +5,14 @@ from utils import get_param
 class Word:
 
     # initialise a word with its meanings, its type and its gender
-    def __init__(self, es: str, de: str, type: str, gender=None):
+    def __init__(self, es: str, de: str, type: str, 
+                    gender=None, level=get_param('MAX_LEVEL')):
         self.es = es
         self.de = de
         self.type = type
         self.gender = gender
-        self._level = get_param('MAX_LEVEL')
-        self.stage = 5
+        self._level = level
+        self.stage = floor(level)
 
     @property
     def level(self):

@@ -15,15 +15,6 @@ class TrainerLogic(QObject):
         self.trainer = Trainer()
         self.active_card = None
 
-        words = [
-            ['hablar', 'sprechen', 'v'],
-            ['ir', 'gehen', 'v'],
-            ['decir', 'sagen', 'v'],
-            ['llegar', 'kommen', 'v'],
-        ]
-        for word in words:
-            self.trainer.add_word(Word(es=word[0], de=word[1], type=word[2]))
-
     # get a new card and display only the german meaning
     def get_new_word(self):
         self.active_card = self.trainer.draw_word()
@@ -54,4 +45,8 @@ class TrainerLogic(QObject):
     # load the latest vocabulary configuration from the data file
     def load(self):
         with open(get_param('DATA_FILE'), 'r', encoding='utf8') as file:
-            print(json.load(file))
+            try:
+                vocabulary = json.load(file)
+                self.trainer.load_vocabulary(vocabulary)
+            except json.decoder.JSONDecodeError as error:
+                print(f"[ERROR]\t{error}")
