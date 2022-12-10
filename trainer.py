@@ -1,6 +1,4 @@
-from collections import deque
 import numpy as np
-
 from word import Word
 from utils import get_param
 
@@ -17,19 +15,14 @@ class Trainer:
         self.weights = np.logspace(0, 1, int(get_param('MAX_LEVEL')))
         self.weights /= np.sum(self.weights)
 
-        # add basic words for debugging purposes
-        """words = [
-            ['hablar', 'sprechen', 'v'],
-            ['ir', 'gehen', 'v'],
-            ['decir', 'sagen', 'v'],
-            ['llegar', 'kommen', 'v'],
-        ]
-        for word in words:
-            self.add_word(Word(es=word[0], de=word[1], type=word[2]))"""
-
     # add a word to the list of known words
     def add_word(self, word: Word) -> None:
-        self.stages[word.stage].append(word)
+        included = any([word.de == entry.de for stage
+                    in self.stages.values() for entry in stage])
+        if not included:
+            self.stages[word.stage].append(word)
+        else:
+            print(f"Word '{word}' is already in the vocabulary list.")
 
     # draw the next word from a random stage
     def draw_word(self) -> Word:
@@ -37,15 +30,13 @@ class Trainer:
         word = None
         while not word:
             if self.stages[stage]:
-                word = self.stages[stage].pop(0)         
-                print(f"Took word from stage {stage}: {word}")
+                word = self.stages[stage].pop(0)
             # if the stage is empty, go downwards until finding a word
             else:
                 if stage == 1:
                     stage = 5
                 else:
                     stage -= 1
-                print(f"Went to stage {stage}.")
         return word
     
     # update the word status and put it into the corresponding stage
