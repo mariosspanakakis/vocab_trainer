@@ -34,13 +34,14 @@ class Word:
                 get_param('MAX_LEVEL') - self.level) * get_param('LVL_GROWTH')
         print(f'Word level reclassified to {self.level}.')
 
-    # generate a dictionary from the relevant contents for displaying
+    # generate a dictionary for displaying and saving in JSON
     def to_dict(self) -> dict:
         dictionary = {
             'de': self.de,
             'es': self.es,
             'type': self.type,
-            'gender': self.gender
+            'gender': self.gender,
+            'level': round(self.level, 2)
         }
         return dictionary
 

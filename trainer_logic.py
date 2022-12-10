@@ -1,4 +1,5 @@
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
+import json
 from trainer import Trainer
 from word import Word
 
@@ -37,5 +38,13 @@ class TrainerLogic(QObject):
     def reclassify_active_card(self, known: bool):
         self.trainer.reclassify_word(self.active_card, known)
         self.active_card = None
+        self.save()
         self.sig_update_word_card.emit(dict(), False)
         self.sig_switch_menu.emit(0)
+
+    def save(self):
+        vocabulary = [word.to_dict() for stage in self.trainer.stages.values()
+                        for word in stage]
+
+        with open('user_data/vocabulary.json', 'w') as file:
+            json.dump(vocabulary, file)

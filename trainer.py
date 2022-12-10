@@ -11,7 +11,7 @@ class Trainer:
         # define a number of stages in which the words are classified
         self.stages = {}
         for i in range(int(get_param('MAX_LEVEL'))):
-            self.stages[i + 1] = deque()
+            self.stages[i + 1] = []
         
         # define and normalize the probabilities for each stage to be picked when drawing vocabulary
         self.stage_weights = np.logspace(0, 1, int(get_param('MAX_LEVEL')))
@@ -19,7 +19,7 @@ class Trainer:
 
     # add a word to the list of known words
     def add_word(self, word: Word) -> None:
-        self.stages[word.stage].appendleft(word)
+        self.stages[word.stage].append(word)
 
     # draw the next word from a random stage
     def draw_word(self) -> Word:
@@ -27,7 +27,7 @@ class Trainer:
         word = None
         while not word:
             if self.stages[stage]:
-                word = self.stages[stage].pop()         
+                word = self.stages[stage].pop(0)         
                 print(f"Took word from stage {stage}: {word}")
             # if the stage is empty, go downwards until finding a word
             else:
@@ -41,7 +41,7 @@ class Trainer:
     # update the word status and put it into the corresponding stage
     def reclassify_word(self, word: Word, known: bool) -> None:
         word.update_level(known)
-        self.stages[word.stage].appendleft(word)
+        self.stages[word.stage].append(word)
 
         for key, stage in self.stages.items():
             print(f'Stage {key}: {stage}')
