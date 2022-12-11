@@ -14,6 +14,8 @@ class Application(QApplication):
         self.connect_signals()
 
     def connect_signals(self):
+        self.interface.sig_quit_application.connect(
+            self.quit)
         # frontend -> backend
         self.interface.sig_get_new_word.connect(
             self.trainer_logic.get_new_word)

@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QLabel, QPushButton
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QLineEdit, QVBoxLayout, QHBoxLayout
+from graphical_elements import ClickableLabel
 from utils import get_param
 import stylesheets as style
 
@@ -9,6 +10,7 @@ import stylesheets as style
 
 class Interface(QWidget):
 
+    sig_quit_application = pyqtSignal()
     sig_get_new_word = pyqtSignal()
     sig_reveal_card = pyqtSignal()
     sig_rate_card = pyqtSignal(bool) # known
@@ -20,17 +22,20 @@ class Interface(QWidget):
         # generate widgets that contain the different interface layers
         self.wid_menu = QWidget()
         self.wid_train = QWidget()
+        self.wid_add = QWidget()
         self.wid_manage = QWidget()
         self.wid_settings = QWidget()
         # add the widgets to the stacked layout
         self.stack = QStackedWidget()
         self.stack.addWidget(self.wid_menu)
         self.stack.addWidget(self.wid_train)
+        self.stack.addWidget(self.wid_add)
         self.stack.addWidget(self.wid_manage)
         self.stack.addWidget(self.wid_settings)
 
         self.create_menu_widget()
         self.create_train_widget()
+        self.create_add_widget()
 
         self.main_vbox = QVBoxLayout()
         self.main_vbox.addWidget(self.stack)
@@ -44,12 +49,17 @@ class Interface(QWidget):
         self.btn_train = QPushButton('Trainieren', self)
         self.btn_train.clicked.connect(
             lambda: self.switch_context(self.wid_train))
+        self.btn_add = QPushButton('Vokabel hinzufügen', self)
+        self.btn_add.clicked.connect(
+            lambda: self.switch_context(self.wid_add))
         self.btn_manage = QPushButton('Vokabeln verwalten', self)
         self.btn_settings = QPushButton('Einstellungen', self)
         self.btn_quit = QPushButton('Schließen', self)
+        self.btn_quit.clicked.connect(self.sig_quit_application.emit)
 
         vbox.addWidget(label)
         vbox.addWidget(self.btn_train)
+        vbox.addWidget(self.btn_add)
         vbox.addWidget(self.btn_manage)
         vbox.addWidget(self.btn_settings)
         vbox.addWidget(self.btn_quit)
@@ -120,6 +130,36 @@ class Interface(QWidget):
 
         self.wid_train.setLayout(vbox)
 
+    def create_manage_widget(self):
+        pass
+
+    def create_add_widget(self):
+        layout = QVBoxLayout(self)
+        self.wid_add.setLayout(layout)
+
+        type_layout = QHBoxLayout()
+        options = ['noun', 'verb', 'adjective', 'expression']
+        self.type_options = {}
+        for option in options:
+            click_label = ClickableLabel(content=option)
+            click_label.clicked.connect(
+                self.deactivate_type_options)
+            click_label.setText(option)
+            type_layout.addWidget(click_label)
+            self.type_options[click_label.content] = click_label
+
+        self.edt_add_de = QLineEdit(self)
+        self.edt_add_de.setPlaceholderText('DE')
+        self.edt_add_es = QLineEdit(self)
+        self.edt_add_es.setPlaceholderText('ES')
+
+        self.btn_add_confirm = QPushButton('Hinzufügen', self)
+        
+        layout.addLayout(type_layout)
+        layout.addWidget(self.edt_add_de)
+        layout.addWidget(self.edt_add_es)
+        layout.addWidget(self.btn_add_confirm)
+
     # switch between the menus
     def switch_context(self, widget: QWidget):
         self.stack.setCurrentWidget(widget)
@@ -141,3 +181,8 @@ class Interface(QWidget):
     # rate the currently active word
     def rate_word_card(self, known):
         self.sig_rate_card.emit(known)
+
+    # unhighlight all non-selected type option labels
+    def deactivate_type_options(self):
+        for click_label in self.type_options.values():
+            click_label.active = False
