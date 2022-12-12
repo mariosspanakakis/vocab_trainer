@@ -1,7 +1,7 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QLabel, QPushButton
 from PyQt5.QtWidgets import QLineEdit, QVBoxLayout, QHBoxLayout
-from graphical_elements import ClickableLabel
+from graphical_elements import ClickableLabel, MenuOptions
 from utils import get_param
 import stylesheets as style
 
@@ -137,16 +137,8 @@ class Interface(QWidget):
         layout = QVBoxLayout(self)
         self.wid_add.setLayout(layout)
 
-        type_layout = QHBoxLayout()
-        options = ['noun', 'verb', 'adjective', 'expression']
-        self.type_options = {}
-        for option in options:
-            click_label = ClickableLabel(content=option)
-            click_label.clicked.connect(
-                self.deactivate_type_options)
-            click_label.setText(option)
-            type_layout.addWidget(click_label)
-            self.type_options[click_label.content] = click_label
+        options = ['Nomen', 'Verb', 'Adjektiv', 'Ausdruck']
+        type_options = MenuOptions(options)
 
         self.edt_add_de = QLineEdit(self)
         self.edt_add_de.setPlaceholderText('DE')
@@ -155,7 +147,7 @@ class Interface(QWidget):
 
         self.btn_add_confirm = QPushButton('Hinzufügen', self)
         
-        layout.addLayout(type_layout)
+        layout.addWidget(type_options)
         layout.addWidget(self.edt_add_de)
         layout.addWidget(self.edt_add_es)
         layout.addWidget(self.btn_add_confirm)

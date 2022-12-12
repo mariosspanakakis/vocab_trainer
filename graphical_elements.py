@@ -7,14 +7,16 @@ import stylesheets as style
 
 class ClickableLabel(QLabel):
 
-    clicked = pyqtSignal(str) # content
+    clicked = pyqtSignal(int) # id
 
-    def __init__(self, content: str, *args, **kwargs):
+    def __init__(self, content: str, id: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.content = content
+        self.id = id
         self._active = False
 
+        self.setText(content)
         self.setFixedSize(get_param('TYPE_LABEL_W'), get_param('TYPE_LABEL_H'))
         self.setAlignment(Qt.AlignCenter | Qt.AlignVCenter)
 
@@ -32,5 +34,30 @@ class ClickableLabel(QLabel):
             self.setStyleSheet(style.LABEL_UNSELECTED)
 
     def mousePressEvent(self, event):
-        self.clicked.emit(self.content)
-        self.active = True
+        self.clicked.emit(self.id)
+
+
+class MenuOptions(QWidget):
+
+    def __init__(self, options: list, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.options = options
+        self.labels = {}
+
+        self.active_id = None
+
+        layout = QHBoxLayout(self)
+        self.setLayout(layout)
+
+        for i, option in enumerate(self.options):
+            click_label = ClickableLabel(content=option, id=i)
+            click_label.clicked.connect(self.switch_active)
+            self.labels[i] = click_label
+            layout.addWidget(click_label)
+
+    def switch_active(self, id):
+        self.active_id = id
+        for label in self.labels.values():
+            label.active = False
+        self.labels[id].active = True
