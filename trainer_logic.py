@@ -48,19 +48,20 @@ class TrainerLogic(QObject):
         self.sig_update_word_card.emit(dict(), False)
         self.sig_switch_menu.emit(0)
 
-    # save the current vocabulary list to a JSON file
+    # save the current vocabulary list
     def save(self):
-        vocabulary = {}
-        for key, stage in self.trainer.stages.items():
-            vocabulary[key] = [word.to_dict() for word in stage]
-        with open(get_param('DATA_FILE'), 'w', encoding='utf8') as file:
-            json.dump(vocabulary, file, indent=4)
+        with open(get_param('DATA_FILE'), 'w') as file:
+            for stage in self.trainer.stages.values():
+                for word in stage:
+                    file.write(word.export())
+            for word in self.trainer.buffer:
+                file.write(word.export())
 
-    # load the latest vocabulary configuration from the data file
+    # load the vocabulary list from the data file
     def load(self):
-        with open(get_param('DATA_FILE'), 'r', encoding='utf8') as file:
-            try:
-                vocabulary = json.load(file)
-                self.trainer.load_vocabulary(vocabulary)
-            except json.decoder.JSONDecodeError as error:
-                print(f"[ERROR]\t{error}")
+        with open(get_param('DATA_FILE'), 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                line = line.strip().split(',')
+                self.trainer.add_word(Word(es=line[0], de=line[1],
+                                           type=line[2], level=float(line[3])))

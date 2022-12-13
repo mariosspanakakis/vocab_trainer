@@ -10,7 +10,7 @@ class Trainer:
         # define a number of empty stages in which the words are classified
         self.stages = {}
         for i in range(int(get_param('MAX_LEVEL'))):
-            self.stages[i + 1] = []
+            self.stages[i + 1] = deque()
         
         # define and normalize the probabilities for each stage to be picked
         self.weights = np.logspace(0, 1, int(get_param('MAX_LEVEL')))
@@ -24,7 +24,7 @@ class Trainer:
         included = any([word.de == entry.de for stage
                     in self.stages.values() for entry in stage])
         if not included:
-            self.stages[word.stage].append(word)
+            self.stages[word.stage].appendleft(word)
         else:
             print(f"Word '{word}' is already in the vocabulary list.")
 
@@ -34,7 +34,7 @@ class Trainer:
         word = None
         while not word:
             if self.stages[stage]:
-                word = self.stages[stage].pop(0)
+                word = self.stages[stage].pop()
             # if the stage is empty, go downwards until finding a word
             else:
                 if stage == 1:
@@ -43,15 +43,13 @@ class Trainer:
                     stage -= 1
         # if there are words in the buffer, pop the next in line
         if len(self.buffer) > get_param('BUFFER_LENGTH'):
-            buf_word = self.buffer.pop()
-            self.stages[buf_word.stage].append(buf_word)
-            print(f"Took word '{buf_word}' from the buffer.")
+            self.add_word(self.buffer.pop())
         return word
     
     # update the word status and put it into the corresponding stage
     def reclassify_word(self, word: Word, known: bool) -> None:
         word.update_level(known)
-        #self.stages[word.stage].append(word)
+
         self.buffer.appendleft(word)
         print(f"Buffer: {self.buffer}")
 

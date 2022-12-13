@@ -1,5 +1,5 @@
 {
-    "DATA_FILE": "user_data/vocabulary.json",
+    "DATA_FILE": "user_data/vocabulary.csv",
     "MIN_LEVEL": 0.0,
     "MAX_LEVEL": 5.0,
     "LVL_DECAY": 0.1,
