@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QStackedWidget, QWidget, QLabel, QPushButton
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout
 from utils import get_param
 import stylesheets as style
 
@@ -39,7 +39,7 @@ class ClickableLabel(QLabel):
 
 class MenuOptions(QWidget):
 
-    def __init__(self, options: list, *args, **kwargs):
+    def __init__(self, options: list, horizontal=True, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.options = options
@@ -47,7 +47,7 @@ class MenuOptions(QWidget):
 
         self.active_id = None
 
-        layout = QHBoxLayout(self)
+        layout = QHBoxLayout(self) if horizontal else QVBoxLayout(self)
         self.setLayout(layout)
 
         for i, option in enumerate(self.options):

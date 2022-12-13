@@ -173,8 +173,3 @@ class Interface(QWidget):
     # rate the currently active word
     def rate_word_card(self, known):
         self.sig_rate_card.emit(known)
-
-    # unhighlight all non-selected type option labels
-    def deactivate_type_options(self):
-        for click_label in self.type_options.values():
-            click_label.active = False

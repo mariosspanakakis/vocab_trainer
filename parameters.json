@@ -4,6 +4,7 @@
     "MAX_LEVEL": 5.0,
     "LVL_DECAY": 0.1,
     "LVL_GROWTH": 0.2,
+    "BUFFER_LENGTH": 2,
     "WORD_CARD_W": 300,
     "WORD_CARD_H": 100,
     "TYPE_LABEL_W": 140,
