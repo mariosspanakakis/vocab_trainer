@@ -146,11 +146,16 @@ class Interface(QWidget):
         self.edt_add_es.setPlaceholderText('ES')
 
         self.btn_add_confirm = QPushButton('Hinzufügen', self)
+
+        self.btn_menu_2 = QPushButton('Hauptmenü', self)
+        self.btn_menu_2.clicked.connect(
+            lambda: self.switch_context(self.wid_menu))
         
         layout.addWidget(type_options)
         layout.addWidget(self.edt_add_de)
         layout.addWidget(self.edt_add_es)
         layout.addWidget(self.btn_add_confirm)
+        layout.addWidget(self.btn_menu_2)
 
     # switch between the menus
     def switch_context(self, widget: QWidget):
