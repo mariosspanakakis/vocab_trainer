@@ -23,6 +23,8 @@ class Application(QApplication):
             self.trainer_logic.reveal_active_card)
         self.interface.sig_rate_card.connect(
             self.trainer_logic.reclassify_active_card)
+        self.interface.sig_add_word.connect(
+            self.trainer_logic.add_word)
         # backend -> frontend
         self.trainer_logic.sig_update_word_card.connect(
             self.interface.update_word_card)

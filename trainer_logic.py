@@ -17,7 +17,7 @@ class TrainerLogic(QObject):
 
         self.load()
 
-        # add basic words for debugging purposes
+        """# add basic words for debugging purposes
         words = [
             ['hablar', 'sprechen', 'v'],
             ['ir', 'gehen', 'v'],
@@ -27,7 +27,7 @@ class TrainerLogic(QObject):
             ['nuevo', 'neu', 'a']
         ]
         for word in words:
-            self.trainer.add_word(Word(es=word[0], de=word[1], type=word[2]))
+            self.trainer.add_word(Word(es=word[0], de=word[1], type=word[2]))"""
 
     # get a new card and display only the german meaning
     def get_new_word(self):
@@ -48,9 +48,16 @@ class TrainerLogic(QObject):
         self.sig_update_word_card.emit(dict(), False)
         self.sig_switch_menu.emit(0)
 
+    # add a user-specific word to the trainer's vocabulary list
+    def add_word(self, word_data):
+        word = Word(es=word_data['es'],
+                    de=word_data['de'],
+                    type=word_data['type'])
+        self.trainer.add_word(word)
+
     # save the current vocabulary list
     def save(self):
-        with open(get_param('DATA_FILE'), 'w') as file:
+        with open(get_param('DATA_FILE'), 'w', encoding='utf8') as file:
             for stage in self.trainer.stages.values():
                 for word in stage:
                     file.write(word.export())
@@ -59,9 +66,9 @@ class TrainerLogic(QObject):
 
     # load the vocabulary list from the data file
     def load(self):
-        with open(get_param('DATA_FILE'), 'r') as file:
+        with open(get_param('DATA_FILE'), 'r', encoding='utf8') as file:
             lines = file.readlines()
             for line in lines:
-                line = line.strip().split(',')
+                line = line.strip().split(';')
                 self.trainer.add_word(Word(es=line[0], de=line[1],
                                            type=line[2], level=float(line[3])))

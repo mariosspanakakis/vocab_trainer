@@ -1,8 +1,9 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QLabel, QPushButton
 from PyQt5.QtWidgets import QLineEdit, QVBoxLayout, QHBoxLayout
-from graphical_elements import ClickableLabel, MenuOptions
+from graphical_elements import MenuOptions
 from utils import get_param
+from word import Word
 import stylesheets as style
 
 # &6o$w0%q95k3p7ts
@@ -14,6 +15,7 @@ class Interface(QWidget):
     sig_get_new_word = pyqtSignal()
     sig_reveal_card = pyqtSignal()
     sig_rate_card = pyqtSignal(bool) # known
+    sig_add_word = pyqtSignal(dict) # word
 
     def __init__(self):
         super().__init__()
@@ -72,12 +74,13 @@ class Interface(QWidget):
         label = QLabel('Vokabeltrainer')
         label.setAlignment(Qt.AlignCenter)
 
-        self.btn_menu = QPushButton('Hauptmenü', self)
-        self.btn_menu.clicked.connect(
+        btn_menu = QPushButton('Hauptmenü', self)
+        btn_menu.clicked.connect(
             lambda: self.switch_context(self.wid_menu))
         
         # german word card
         layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignCenter)
         self.lbl_word_de = QLabel('', self)
         self.lbl_word_de.setAlignment(Qt.AlignCenter)
         self.lbl_word_de.setStyleSheet(style.WORD_CARD)
@@ -126,7 +129,7 @@ class Interface(QWidget):
         vbox.addWidget(label)
         vbox.addLayout(layout)
         vbox.addWidget(self.stack_word_options)
-        vbox.addWidget(self.btn_menu)
+        vbox.addWidget(btn_menu)
 
         self.wid_train.setLayout(vbox)
 
@@ -138,24 +141,26 @@ class Interface(QWidget):
         self.wid_add.setLayout(layout)
 
         options = ['Nomen', 'Verb', 'Adjektiv', 'Ausdruck']
-        type_options = MenuOptions(options)
+        self.type_options = MenuOptions(options)
 
         self.edt_add_de = QLineEdit(self)
         self.edt_add_de.setPlaceholderText('DE')
         self.edt_add_es = QLineEdit(self)
         self.edt_add_es.setPlaceholderText('ES')
 
-        self.btn_add_confirm = QPushButton('Hinzufügen', self)
+        btn_add_confirm = QPushButton('Hinzufügen', self)
+        btn_add_confirm.clicked.connect(
+            self.add_word)
 
-        self.btn_menu_2 = QPushButton('Hauptmenü', self)
-        self.btn_menu_2.clicked.connect(
+        btn_menu = QPushButton('Hauptmenü', self)
+        btn_menu.clicked.connect(
             lambda: self.switch_context(self.wid_menu))
         
-        layout.addWidget(type_options)
+        layout.addWidget(self.type_options)
         layout.addWidget(self.edt_add_de)
         layout.addWidget(self.edt_add_es)
-        layout.addWidget(self.btn_add_confirm)
-        layout.addWidget(self.btn_menu_2)
+        layout.addWidget(btn_add_confirm)
+        layout.addWidget(btn_menu)
 
     # switch between the menus
     def switch_context(self, widget: QWidget):
@@ -178,3 +183,13 @@ class Interface(QWidget):
     # rate the currently active word
     def rate_word_card(self, known):
         self.sig_rate_card.emit(known)
+
+    # add the entered word to the vocabulary list, if the input is valid
+    def add_word(self):
+        # TODO: add validity check
+        word_data = {
+            'es': self.edt_add_es.text(),
+            'de': self.edt_add_de.text(),
+            'type': ['n', 'v', 'a', 'x'][self.type_options.active_id]
+        }
+        self.sig_add_word.emit(word_data)
