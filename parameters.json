@@ -5,8 +5,9 @@
     "LVL_DECAY": 0.1,
     "LVL_GROWTH": 0.2,
     "BUFFER_LENGTH": 30,
-    "WORD_CARD_W": 300,
-    "WORD_CARD_H": 100,
+    "WORD_CARD_W": 600,
+    "WORD_CARD_H": 200,
     "TYPE_LABEL_W": 140,
-    "TYPE_LABEL_H": 60
+    "TYPE_LABEL_H": 60,
+    "FONT_SIZE_WORD_CARD": 24
 }

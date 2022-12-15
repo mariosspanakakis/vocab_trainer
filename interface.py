@@ -1,9 +1,9 @@
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QStackedWidget, QWidget, QLabel, QPushButton
 from PyQt5.QtWidgets import QLineEdit, QVBoxLayout, QHBoxLayout
+from PyQt5.QtGui import QFont
 from graphical_elements import MenuOptions
 from utils import get_param
-from word import Word
 import stylesheets as style
 
 # &6o$w0%q95k3p7ts
@@ -81,13 +81,16 @@ class Interface(QWidget):
         # german word card
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignCenter)
+        font_word_card = QFont('Arial', get_param('FONT_SIZE_WORD_CARD'))
         self.lbl_word_de = QLabel('', self)
+        self.lbl_word_de.setFont(font_word_card)
         self.lbl_word_de.setAlignment(Qt.AlignCenter)
         self.lbl_word_de.setStyleSheet(style.WORD_CARD)
         self.lbl_word_de.setFixedSize(
             get_param("WORD_CARD_W"), get_param("WORD_CARD_H"))
         # spanish word card
         self.lbl_word_es = QLabel('', self)
+        self.lbl_word_es.setFont(font_word_card)
         self.lbl_word_es.setAlignment(Qt.AlignCenter)
         self.lbl_word_es.setStyleSheet(style.WORD_CARD)
         self.lbl_word_es.setFixedSize(
