@@ -17,18 +17,6 @@ class TrainerLogic(QObject):
 
         self.load()
 
-        """# add basic words for debugging purposes
-        words = [
-            ['hablar', 'sprechen', 'v'],
-            ['ir', 'gehen', 'v'],
-            ['decir', 'sagen', 'v'],
-            ['llegar', 'kommen', 'v'],
-            ['barco', 'Schiff', 'n'],
-            ['nuevo', 'neu', 'a']
-        ]
-        for word in words:
-            self.trainer.add_word(Word(es=word[0], de=word[1], type=word[2]))"""
-
     # get a new card and display only the german meaning
     def get_new_word(self):
         self.active_card = self.trainer.draw_word()

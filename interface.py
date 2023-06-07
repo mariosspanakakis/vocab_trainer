@@ -6,8 +6,6 @@ from graphical_elements import MenuOptions
 from utils import get_param
 import stylesheets as style
 
-# &6o$w0%q95k3p7ts
-
 
 class Interface(QWidget):
 
@@ -19,7 +17,7 @@ class Interface(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Vokabeljau')
+        self.setWindowTitle('Vocabulary Trainer')
 
         # generate widgets that contain the different interface layers
         self.wid_menu = QWidget()
