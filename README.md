@@ -1,11 +1,11 @@
 # Vocabulary Trainer
 
-A simple vocabulary trainer based on ```PyQt5```. Supply your own vocab via the application or by editing ```user_data/vocabulary.csv```.
+A simple vocabulary trainer based on ```PyQt5```. You can easily customize your vocabulary either within the application or by editing the ```user_data/vocabulary.csv``` file.
 
 ### Word Staging
 
-Each word is assigned a level between ```0.0``` and ```5.0``` that describes how difficult it is for the user. If the user cannot remember the translation, the word level is increased. If he is familiar with the word, the difficulty level is decreased. The higher the word level, the more frequently it will be picked. The parameters for level handling can be adjusted in ```parameters.json```. The word level decrease factor ```LVL_DECAY``` should be set smaller than the level increase factor ```LVL_GROWTH``` in order to make sure that words are not excluded prematurely.
+Each word in your vocabulary is assigned a difficulty level ranging from ```0.0``` to ```5.0```, indicating its challenge for you. When you struggle to recall a translation, the word's difficulty level increases. Conversely, if you successfully remember it, the difficulty level decreases. This dynamic system ensures that words you find challenging are presented more frequently, which is known as the spaced-repetition learning method. You can fine-tune the parameters for managing word levels in the ```parameters.json``` file. It is essential to set the word level decrease factor ```LVL_DECAY``` smaller than the level increase factor ```LVL_GROWTH``` to prevent prematurely excluding words from your learning process.
 
 ### Word Buffer
 
-To avoid words being picked repeatedly, there is a buffer of fixed length ```BUFFER_LENGTH``` that retains words before passing them to the staging area.
+To prevent repetitive selection of words, there's a buffer with a fixed length ```BUFFER_LENGTH``` that temporarily stores words before they are introduced into the staging area.
